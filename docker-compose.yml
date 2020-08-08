@@ -13,6 +13,8 @@ services:
       - MONGO_ROOT_USER=${MONGO_ROOT_USER}
       - MONGO_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
       - MONGO_DATABASE_NAME=NewsPipe
+    depends_on:
+      - "mongo"
   mongo:
     build: mongo-docker/.
     container_name: mongo
@@ -20,12 +22,11 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
       - MONGO_INITDB_DATABASE=NewsPipe
-    depends_on:
-      - "airflow-newspipe"
     ports:
       - "27017:27017"
     volumes:
       - ./mongodata:/data
+
   mongo-express:
     image: mongo-express
     container_name: mongo_express
