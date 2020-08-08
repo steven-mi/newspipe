@@ -21,6 +21,8 @@ def create_dag(name, url, airflow_config, output_dir="/output"):
     cleaner = NewsCleaner(rss_feed=crawler.outputs["rss_feed"])
     mongo = MongoImport(rss_feed=cleaner.outputs["rss_feed_cleaned"], colname=pipeline_name)
 
+    airflow_config["catchup"] = False
+
     tfx_pipeline = pipeline.Pipeline(pipeline_name=pipeline_name,
                                      pipeline_root=pipeline_root,
                                      components=[crawler,
