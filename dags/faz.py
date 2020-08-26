@@ -5,7 +5,8 @@ from dag_factory import create_dag
 
 url = "faz.net"
 airflow_config = {'schedule_interval': '*/30 * * * *',  # every 30 minutes
-                  'start_date': datetime.datetime(2020, 7, 6, 21), # year, month, day, hour
+                  # year, month, day, hour
+                  'start_date': datetime.datetime(2020, 7, 6, 21),
                   }
 
 DAG = create_dag(url=url,

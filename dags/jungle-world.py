@@ -1,15 +1,16 @@
 import os
-    import datetime
+import datetime
 
-    from dag_factory import create_dag
+from dag_factory import create_dag
 
-    
+
 url = "jungle-world.com/rss.xml.de"
 
-    airflow_config = {'schedule_interval': '*/30 * * * *', # every 30 minutes
-                      'start_date': datetime.datetime(2020, 7, 6, 21), # year, month, day, hour
-                      }
+airflow_config = {'schedule_interval': '*/30 * * * *',  # every 30 minutes
+                  # year, month, day, hour
+                  'start_date': datetime.datetime(2020, 7, 6, 21),
+                  }
 
-    DAG = create_dag(url=url,
-                     airflow_config=airflow_config,
-                     name=os.path.basename(__file__))
+DAG = create_dag(url=url,
+                 airflow_config=airflow_config,
+                 name=os.path.basename(__file__))
