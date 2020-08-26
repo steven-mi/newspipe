@@ -79,7 +79,7 @@ class Executor(base_executor.BaseExecutor):
         logging.info(news_df.head())
 
         output_path = os.path.join(get_single_uri(output_dict["rss_feed_cleaned"]), "feed.csv")
-        news_df.to_csv(output_path)
+        news_df.to_csv(output_path, index=False)
 
 class NewsCleanerSpec(types.ComponentSpec):
     PARAMETERS = {

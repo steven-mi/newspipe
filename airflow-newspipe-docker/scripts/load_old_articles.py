@@ -11,7 +11,7 @@ from pymongo import MongoClient
 CSV_PATH = "/output/pipeline_backup"
 DB_NAME = os.environ['MONGO_DATABASE_NAME']
 
-IP = "0.0.0.0"
+IP = "mongo"
 PORT = 27017
 
 USERNAME = os.environ['MONGO_ROOT_USER']
@@ -68,7 +68,7 @@ def get_all_csv_paths(path):
 
 
 def main():
-    client = MongoClient(IP, PORT, username=USERNAME, password=PASSWORD)
+    client = MongoClient(host=IP, port=PORT, username=USERNAME, password=PASSWORD)
     db = client[DB_NAME]
 
     csv_paths = get_all_csv_paths(CSV_PATH)

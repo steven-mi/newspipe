@@ -34,8 +34,8 @@ class Executor(base_executor.BaseExecutor):
     def Do(self, input_dict: Dict[Text, List[types.Artifact]],
            output_dict: Dict[Text, List[types.Artifact]],
            exec_properties: Dict[Text, Any]) -> None:
-        client = MongoClient(exec_properties["ip"],
-                             exec_properties["port"],
+        client = MongoClient(host=exec_properties["ip"],
+                             port=int(exec_properties["port"]),
                              username=exec_properties["username"],
                              password=exec_properties["password"])
         db = client[exec_properties["dbname"]]
@@ -86,7 +86,7 @@ class MongoImport(base_component.BaseComponent):
                  password: Text = None,
                  dbname: Text = None):
         if not ip:
-            ip = "0.0.0.0"
+            ip = "mongo"
         if not port:
             port = "27017"
         if not username:
