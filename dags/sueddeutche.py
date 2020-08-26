@@ -4,7 +4,7 @@ import datetime
 from dag_factory import create_dag
 
 url = "https://rss.sueddeutsche.de/app/service/rss/alles/index.rss?output=rss"
-airflow_config = {'schedule_interval': '*/30 * * * *',  # every 30 minutes
+airflow_config = {'schedule_interval': '*/90 * * * *',  # every 30 minutes
                   # year, month, day, hour
                   'start_date': datetime.datetime(2020, 7, 6, 21),
                   }
