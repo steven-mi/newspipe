@@ -1,7 +1,19 @@
 version: '3.0'
 services:
+  postgres:
+      image: postgres
+      environment:
+          - POSTGRES_USER=${POSTGRES_USER}
+          - POSTGRES_PASSWORD=${POSTGRES_PASS}
+          - POSTGRES_DB=airflow
+
   airflow-newspipe:
-    build: airflow-newspipe-docker/.
+    build: 
+      context: airflow-newspipe-docker/
+      dockerfile: Dockerfile
+      args:
+        - POSTGRES_USER=${POSTGRES_USER}
+        - POSTGRES_PASS=${POSTGRES_PASS}
     container_name: airflow_newspipe
     ports:
       - "8080:8080"
@@ -14,7 +26,9 @@ services:
       - MONGO_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
       - MONGO_DATABASE_NAME=NewsPipe
     depends_on:
+      - "postgres"
       - "mongo"
+
   mongo:
     build: mongo-docker/.
     container_name: mongo
