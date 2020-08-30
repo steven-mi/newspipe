@@ -1,7 +1,18 @@
 version: '3.0'
 services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASS}
+    ports:
+      - "127.0.0.1:15672:15672"
+      #- "127.0.0.1:5672:5672"
+  
   postgres:
       image: postgres
+      container_name: postgres
       environment:
           - POSTGRES_USER=${POSTGRES_USER}
           - POSTGRES_PASSWORD=${POSTGRES_PASS}
@@ -14,6 +25,8 @@ services:
       args:
         - POSTGRES_USER=${POSTGRES_USER}
         - POSTGRES_PASS=${POSTGRES_PASS}
+        - RABBITMQ_USER=${RABBITMQ_USER}
+        - RABBITMQ_PASS=${RABBITMQ_PASS}
     container_name: airflow_newspipe
     ports:
       - "8080:8080"
@@ -28,6 +41,47 @@ services:
     depends_on:
       - "postgres"
       - "mongo"
+      - "rabbitmq"
+      - "airflow-scheduler"
+
+  airflow-scheduler:
+    build: 
+      context: airflow-newspipe-docker/
+      dockerfile: Dockerfile
+      args:
+        - POSTGRES_USER=${POSTGRES_USER}
+        - POSTGRES_PASS=${POSTGRES_PASS}
+        - RABBITMQ_USER=${RABBITMQ_USER}
+        - RABBITMQ_PASS=${RABBITMQ_PASS}
+    container_name: airflow_scheduler
+    volumes:
+      - ./dags:/airflow/dags
+      - ./output:/output
+      - ./logs:/airflow/logs
+    environment:
+      - MONGO_ROOT_USER=${MONGO_ROOT_USER}
+      - MONGO_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+      - MONGO_DATABASE_NAME=NewsPipe
+    entrypoint: airflow scheduler
+
+  airflow-worker:
+    build: 
+      context: airflow-newspipe-docker/
+      dockerfile: Dockerfile
+      args:
+        - POSTGRES_USER=${POSTGRES_USER}
+        - POSTGRES_PASS=${POSTGRES_PASS}
+        - RABBITMQ_USER=${RABBITMQ_USER}
+        - RABBITMQ_PASS=${RABBITMQ_PASS}
+    volumes:
+      - ./dags:/airflow/dags
+      - ./output:/output
+      - ./logs:/airflow/logs
+    environment:
+      - MONGO_ROOT_USER=${MONGO_ROOT_USER}
+      - MONGO_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+      - MONGO_DATABASE_NAME=NewsPipe
+    entrypoint: airflow worker
 
   mongo:
     build: mongo-docker/.
@@ -58,3 +112,4 @@ services:
       - "airflow-newspipe"
     ports:
       - "8081:8081"
+    restart: always

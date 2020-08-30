@@ -11,6 +11,4 @@ cp -r /output/pipelines /output/pipelines_backup/$(date +"%d-%m-%Y")
 rm -rf /output/pipelines
 fi
 
-rm $AIRFLOW_HOME/airflow-webserver*
-airflow webserver -D
-airflow scheduler
+airflow webserver

@@ -11,6 +11,8 @@ MONGOEXPRESS_LOGIN=dev
 MONGOEXPRESS_PASSWORD=dev
 POSTGRES_USER=airflow
 POSTGRES_PASS=airflow
+RABBITMQ_USER=rabbit
+RABBITMQ_PASS=rabbit
 ```
 
 If you want to specify the number of threads then open `airflow-newspipe-docker` and adjust the sed command in line 57 e.g. if you want 4 threads:
@@ -26,10 +28,20 @@ It is recommended to set the number of threads to the number of available cores.
 ## Getting Started
 To start this application, run:
 ```
-docker-compose up
+docker-compose up airflow-newspipe
 ```
+To add worker nodes, run:
+```
+docker-compose up airflow-worker
+```
+To run have multiple worker nodes on a single machine, run:
+```
+docker-compose up --scale airflow-worker=<N_WORKERS>
+```
+
 - To see the database collections, [mongo-express](https://github.com/mongo-express/mongo-express) is in use and available on `localhost:8081`. The MongoDB itself is available on port `27017`. 
 - The airflow application should be available on `localhost:8080`. You will see the airflow dashboard with the default examples.
+- The RabbitMQ webapp is available on `localhost:15672`. There you can see all the worker nodes and their status.
 
 ## Adding article sources
 Each crawler is defined as DAG in 'dag'. To add a data source, you must therefore add DAGs in the `dags` folder. A DAG is a Python script that contains the settings for an entire crawling pipeline. Use the default example as a template. The DAGs are very simple and straightforward.
