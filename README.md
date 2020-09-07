@@ -9,7 +9,19 @@ MONGO_ROOT_USER=devroot
 MONGO_ROOT_PASSWORD=devroot
 MONGOEXPRESS_LOGIN=dev
 MONGOEXPRESS_PASSWORD=dev
+POSTGRES_USER=airflow
+POSTGRES_PASS=airflow
 ```
+
+If you want to specify the number of threads then open `airflow-newspipe-docker` and adjust the sed command in line 57 e.g. if you want 4 threads:
+```
+&& sed -i'.orig' 's/max_threads = 2/max_threads = 4/g' ${AIRFLOW_HOME}/airflow.cfg \
+```
+or 10:
+```
+&& sed -i'.orig' 's/max_threads = 2/max_threads = 10/g' ${AIRFLOW_HOME}/airflow.cfg \
+```
+It is recommended to set the number of threads to the number of available cores.
 
 ## Getting Started
 To start this application, run:
