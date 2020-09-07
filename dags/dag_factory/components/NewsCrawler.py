@@ -49,11 +49,8 @@ class NewsCrawler(base_component.BaseComponent):
     EXECUTOR_SPEC = executor_spec.ExecutorClassSpec(Executor)
 
     def __init__(self,
-                 url: Text,
-                 rss_feed: types.Channel = None):
-        if not rss_feed:
-            rss_feed = external_input("rss_feed")
-
+                 url: Text):
+        rss_feed = external_input("rss_feed")
         spec = NewsCrawlerSpec(url=url,
                                rss_feed=rss_feed)
 

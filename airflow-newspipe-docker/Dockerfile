@@ -8,6 +8,10 @@ ARG POSTGRES_PASS
 # Python
 ARG PYTHON_VERSION=3.6
 
+# TFX Version
+ARG TENSORFLOW_VERSION=1.15.0
+ARG TFX_VERSION=0.15.0
+
 # NewsCrawler version
 ARG NEWSCRAWLER_VERSION=0.1.2
 
@@ -39,11 +43,13 @@ RUN pip3 install --upgrade pip \
     && pip install --upgrade setuptools \
     && pip install apache-airflow==${AIRFLOW_VERSION} \
     && pip install NewsCrawler3==${NEWSCRAWLER_VERSION} \
+    && pip install tensorflow==${TENSORFLOW_VERSION} \
+    && pip install tensorflow-serving-api==${TENSORFLOW_VERSION} \
+    && pip install tfx==${TFX_VERSION} \
     && pip install SQLAlchemy==1.3.15 \
-    && pip install tfx \
-    && pip3 install --upgrade six>=1.13.0 \
-    && pip install flask-bcrypt
-RUN pip install psycopg2-binary
+    && pip install --upgrade six==1.12.0 \
+    && pip install flask-bcrypt \ 
+    && pip install psycopg2-binary
 
 # Setup Airflow
 RUN airflow initdb
@@ -68,5 +74,5 @@ WORKDIR ${AIRFLOW_HOME}
 COPY scripts /scripts
 
 # Start Airflow and Scheduler
-RUN chmod u+x /scripts/start-airflow.sh
-CMD /scripts/start-airflow.sh
+RUN chmod u+x /scripts/startup.sh
+CMD /scripts/startup.sh

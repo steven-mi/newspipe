@@ -81,6 +81,7 @@ class Executor(base_executor.BaseExecutor):
         output_path = os.path.join(get_single_uri(output_dict["rss_feed_cleaned"]), "feed.csv")
         news_df.to_csv(output_path, index=False)
 
+
 class NewsCleanerSpec(types.ComponentSpec):
     PARAMETERS = {
     }
@@ -99,11 +100,8 @@ class NewsCleaner(base_component.BaseComponent):
     EXECUTOR_SPEC = executor_spec.ExecutorClassSpec(Executor)
 
     def __init__(self,
-                 rss_feed: types.Channel,
-                 rss_feed_cleaned: types.Channel = None):
-        if not rss_feed_cleaned:
-            rss_feed_cleaned = external_input("rss_feed")
-
+                 rss_feed: types.Channel):
+        rss_feed_cleaned = external_input("rss_feed")
         spec = NewsCleanerSpec(rss_feed_cleaned=rss_feed_cleaned,
                                rss_feed=rss_feed)
 

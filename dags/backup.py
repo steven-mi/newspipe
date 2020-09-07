@@ -3,14 +3,12 @@ import datetime
 
 from dag_factory import create_dag
 
-
-url = "op-marburg.de"
-
-airflow_config = {'schedule_interval': '*/90 * * * *',  # every 30 minutes
+airflow_config = {'schedule_interval': None,  # every 30 minutes
                   # year, month, day, hour
                   'start_date': datetime.datetime(2020, 7, 6, 21),
                   }
 
-DAG = create_dag(url=url,
+DAG = create_dag(url=None,
                  airflow_config=airflow_config,
-                 name=os.path.basename(__file__))
+                 name=os.path.basename(__file__),
+                 dag_type="backup")
