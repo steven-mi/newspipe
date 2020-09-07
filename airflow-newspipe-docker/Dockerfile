@@ -47,7 +47,7 @@ RUN pip3 install --upgrade pip \
     && pip install tensorflow-serving-api==${TENSORFLOW_VERSION} \
     && pip install tfx==${TFX_VERSION} \
     && pip install SQLAlchemy==1.3.15 \
-    && pip install --upgrade six==1.12.0 \
+    && pip install --upgrade six==1.13.0 \
     && pip install flask-bcrypt \ 
     && pip install psycopg2-binary
 
