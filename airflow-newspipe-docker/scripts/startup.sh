@@ -15,4 +15,4 @@ fi
 
 rm -rf $AIRFLOW_HOME/airflow-webserver* || :
 airflow webserver -D
-airflow scheduler
+airflow scheduler -w 2
