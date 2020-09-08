@@ -14,5 +14,5 @@ rm -rf /output/pipelines
 fi
 
 rm -rf $AIRFLOW_HOME/airflow-webserver* || :
-airflow webserver -D
-airflow scheduler -w 2
+airflow webserver -D -w 2
+airflow scheduler
