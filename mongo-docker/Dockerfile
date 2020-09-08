@@ -1,4 +1,3 @@
-
 FROM mongo:4.2-bionic
 LABEL maintainer="stevenmi - Steven Mi <s0558366@htw-berlin.de>"
 

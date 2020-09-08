@@ -21,12 +21,14 @@ def create_dag(name, url, airflow_config, dag_type="default", output_dir="/outpu
     components = []
     if dag_type == "default":
         crawler = NewsCrawler(url=url)
-        mongo = MongoImport(rss_feed=crawler.outputs["rss_feed"], colname=pipeline_name)
+        mongo = MongoImport(
+            rss_feed=crawler.outputs["rss_feed"], colname=pipeline_name)
         components = components + [crawler, mongo]
     elif dag_type == "cleaner":
         crawler = NewsCrawler(url=url)
         cleaner = NewsCleaner(rss_feed=crawler.outputs["rss_feed"])
-        mongo = MongoImport(rss_feed=cleaner.outputs["rss_feed_cleaned"], colname=pipeline_name)
+        mongo = MongoImport(
+            rss_feed=cleaner.outputs["rss_feed_cleaned"], colname=pipeline_name)
         components = components + [crawler, cleaner, mongo]
     elif dag_type == "backup":
         old_news = OldNewsImport(backup_dir="/output/pipelines_backup")

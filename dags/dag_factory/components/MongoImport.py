@@ -40,7 +40,8 @@ class Executor(base_executor.BaseExecutor):
             col = db[exec_properties["colname"]]
 
             df = pd.read_csv(csv_path)
-            print("--Storing {} files to {}".format(len(df), exec_properties["colname"]))
+            print("--Storing {} files to {}".format(len(df),
+                                                    exec_properties["colname"]))
             for _, row in df.iterrows():
                 data = dict(row)
                 data_op = {'$set': data}

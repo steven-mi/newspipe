@@ -40,7 +40,8 @@ def date_str_to_unixtime(date_str):
     except:
         pass
     try:
-        d = datetime.strptime(date_str.split('+')[0].replace("T", " "), '%Y-%m-%d %H:%M:%S')
+        d = datetime.strptime(date_str.split(
+            '+')[0].replace("T", " "), '%Y-%m-%d %H:%M:%S')
     except:
         pass
     try:
@@ -70,15 +71,19 @@ class Executor(base_executor.BaseExecutor):
     def Do(self, input_dict: Dict[Text, List[types.Artifact]],
            output_dict: Dict[Text, List[types.Artifact]],
            exec_properties: Dict[Text, Any]) -> None:
-        input_path = os.path.join(get_single_uri(input_dict["rss_feed"]), "feed.csv")
+        input_path = os.path.join(get_single_uri(
+            input_dict["rss_feed"]), "feed.csv")
         news_df = pd.read_csv(input_path)
 
         logging.info(news_df.head())
-        news_df["published"] = [date_str_to_unixtime(date_str) for date_str in news_df["published"]]
-        news_df["tags"] = [tag_dict_to_dict(tag_dict) for tag_dict in news_df["tags"]]
+        news_df["published"] = [date_str_to_unixtime(
+            date_str) for date_str in news_df["published"]]
+        news_df["tags"] = [tag_dict_to_dict(
+            tag_dict) for tag_dict in news_df["tags"]]
         logging.info(news_df.head())
 
-        output_path = os.path.join(get_single_uri(output_dict["rss_feed_cleaned"]), "feed.csv")
+        output_path = os.path.join(get_single_uri(
+            output_dict["rss_feed_cleaned"]), "feed.csv")
         news_df.to_csv(output_path, index=False)
 
 

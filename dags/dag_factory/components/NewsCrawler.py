@@ -28,7 +28,8 @@ class Executor(base_executor.BaseExecutor):
         crawler = Crawler(exec_properties["url"])
         rss_feed = crawler.get_article_information_as_dataframe()
 
-        output_path = os.path.join(get_single_uri(output_dict["rss_feed"]), "feed.csv")
+        output_path = os.path.join(get_single_uri(
+            output_dict["rss_feed"]), "feed.csv")
         rss_feed.to_csv(output_path, index=False)
 
 

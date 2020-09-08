@@ -41,14 +41,18 @@ class Executor(base_executor.BaseExecutor):
                 if "NewsCrawler" not in csv_path:
                     continue
 
-                csv_rel_path = os.path.relpath(csv_path, path)
+                csv_rel_path = os.path.relpath(csv_path, os.path.join(path, "pipelines"))
                 csv_rel_path_norm = os.path.normpath(csv_rel_path)
                 csv_source = csv_rel_path_norm.split(os.sep)[0]
                 csv_source = csv_source.replace(".py", "")
 
                 col = db[csv_source]
-                df = pd.read_csv(csv_path)
-                print("--Storing {} files to {} from {}".format(len(df), csv_source, csv_path))
+                try:
+                    df = pd.read_csv(csv_path)
+                except:
+                    continue
+                print("--Storing {} files to {} from {}".format(len(df),
+                                                                csv_source, csv_path))
                 for _, row in df.iterrows():
                     data = dict(row)
                     data_op = {'$set': data}
