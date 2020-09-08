@@ -13,6 +13,6 @@ cp -r /output/pipelines /output/pipelines_backup/$foldername
 rm -rf /output/pipelines
 fi
 
-rm $AIRFLOW_HOME/airflow-webserver* || true
+rm -rf $AIRFLOW_HOME/airflow-webserver* || :
 airflow webserver -D
 airflow scheduler
