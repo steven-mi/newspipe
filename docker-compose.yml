@@ -26,11 +26,11 @@ services:
       - MONGO_ROOT_USER=${MONGO_ROOT_USER}
       - MONGO_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
       - MONGO_DATABASE_NAME=NewsPipe
-    command: ["--bind_ip_all"]
     depends_on:
       - "postgres"
       - "mongo"
-
+    restart: always
+    
   mongo:
     build: mongo-docker/.
     container_name: mongo
@@ -42,6 +42,7 @@ services:
       - "127.0.0.1:27017:27017"
     volumes:
       - ./mongodata:/data
+    command: ["--bind_ip_all"]
 
   mongo-express:
     image: mongo-express
@@ -60,3 +61,4 @@ services:
       - "airflow-newspipe"
     ports:
       - "8081:8081"
+    restart: always
