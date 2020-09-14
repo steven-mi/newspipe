@@ -26,6 +26,7 @@ services:
       - MONGO_ROOT_USER=${MONGO_ROOT_USER}
       - MONGO_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
       - MONGO_DATABASE_NAME=NewsPipe
+    command: ["--bind_ip_all"]
     depends_on:
       - "postgres"
       - "mongo"
