@@ -1,9 +1,9 @@
 import os
 
-from dag_factory.components.OldNewsImport import OldNewsImport
-from dag_factory.components.NewsCrawler import NewsCrawler
-from dag_factory.components.MongoImport import MongoImport
-from dag_factory.components.NewsCleaner import NewsCleaner
+from dag_factory.components.old_news_import import OldNewsImport
+from dag_factory.components.news_crawler import NewsCrawler
+from dag_factory.components.mongo_import import MongoImport
+from dag_factory.components.news_cleaner import NewsCleaner
 
 from tfx.orchestration import metadata
 from tfx.orchestration import pipeline
