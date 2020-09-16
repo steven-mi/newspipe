@@ -49,7 +49,8 @@ RUN pip3 install --upgrade pip \
     && pip install SQLAlchemy==1.3.15 \
     && pip install --upgrade six==1.13.0 \
     && pip install flask-bcrypt \ 
-    && pip install psycopg2-binary
+    && pip install psycopg2-binary \
+    && pip install pyarrow==0.14.0 
 
 # Setup Airflow
 RUN airflow initdb
@@ -60,8 +61,8 @@ RUN sed -i'.orig' 's/dag_dir_list_interval = 300/dag_dir_list_interval = 600/g' 
     && sed -i'.orig' 's/scheduler_heartbeat_sec = 5/scheduler_heartbeat_sec = 1/g' ${AIRFLOW_HOME}/airflow.cfg \
     && sed -i'.orig' 's/dag_default_view = tree/dag_default_view = graph/g' ${AIRFLOW_HOME}/airflow.cfg \
     && sed -i'.orig' 's/load_examples = True/load_examples = False/g' ${AIRFLOW_HOME}/airflow.cfg \
-    && sed -i'.orig' 's/parallelism = 32/parallelism = 4/g' ${AIRFLOW_HOME}/airflow.cfg \
-    && sed -i'.orig' 's/max_active_runs_per_dag = 16/max_active_runs_per_dag = 2/g' ${AIRFLOW_HOME}/airflow.cfg \
+    && sed -i'.orig' 's/parallelism = 32/parallelism = 2/g' ${AIRFLOW_HOME}/airflow.cfg \
+    && sed -i'.orig' 's/max_active_runs_per_dag = 16/max_active_runs_per_dag = 1/g' ${AIRFLOW_HOME}/airflow.cfg \
     && sed -i'.orig' 's/dagbag_import_timeout = 30/dagbag_import_timeout = 600/g' ${AIRFLOW_HOME}/airflow.cfg \
     && sed -i'.orig' 's/load_examples = True/load_examples = False/g' ${AIRFLOW_HOME}/airflow.cfg \
     && sed -i'.orig' 's/max_threads = 2/max_threads = 1/g' ${AIRFLOW_HOME}/airflow.cfg \

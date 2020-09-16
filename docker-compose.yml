@@ -1,7 +1,7 @@
 version: '3.0'
 services:
   postgres:
-      image: postgres
+      image: postgres:10.14
       container_name: postgres
       environment:
           - POSTGRES_USER=${POSTGRES_USER}
@@ -32,7 +32,7 @@ services:
     restart: always
     
   mongo:
-    build: mongo-docker/.
+    image: mongo:4.2-bionic
     container_name: mongo
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER}
@@ -42,10 +42,10 @@ services:
       - "127.0.0.1:27017:27017"
     volumes:
       - ./mongodata:/data
-    command: --bind_ip 0.0.0.0
+    command: --bind_ip=0.0.0.0
 
   mongo-express:
-    image: mongo-express
+    image: mongo-express:0.54
     container_name: mongo_express
     environment:
       - ME_CONFIG_MONGODB_SERVER=mongo
