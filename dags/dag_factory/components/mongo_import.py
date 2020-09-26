@@ -80,7 +80,7 @@ class MongoImport(base_component.BaseComponent):
                  password: Text = None,
                  dbname: Text = None):
         if not ip:
-            ip = "mongo"
+            ip = "127.0.0.1"
         if not port:
             port = "27017"
         if not username:

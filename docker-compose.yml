@@ -1,12 +1,13 @@
-version: '3.0'
+version: '2'
 services:
   postgres:
-      image: postgres:10.14
+      image: postgres:13
       container_name: postgres
       environment:
           - POSTGRES_USER=${POSTGRES_USER}
           - POSTGRES_PASSWORD=${POSTGRES_PASS}
           - POSTGRES_DB=airflow
+      network_mode: host
 
   airflow-newspipe:
     build: 
@@ -15,6 +16,7 @@ services:
       args:
         - POSTGRES_USER=${POSTGRES_USER}
         - POSTGRES_PASS=${POSTGRES_PASS}
+        - POSTGRES_IP=127.0.0.1
     container_name: airflow_newspipe
     ports:
       - "8080:8080"
@@ -30,7 +32,8 @@ services:
       - "postgres"
       - "mongo"
     restart: always
-    
+    network_mode: host
+
   mongo:
     image: mongo:4.2-bionic
     container_name: mongo
@@ -38,17 +41,16 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
       - MONGO_INITDB_DATABASE=NewsPipe
-    ports:
-      - "127.0.0.1:27017:27017"
+    network_mode: host
     volumes:
       - ./mongodata:/data
-    command: --bind_ip=0.0.0.0
+    command: --bind_ip=127.0.0.1
 
   mongo-express:
     image: mongo-express:0.54
     container_name: mongo_express
     environment:
-      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_MONGODB_SERVER=127.0.0.1
       - ME_CONFIG_MONGODB_PORT=27017
       - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
       - ME_CONFIG_MONGODB_AUTH_DATABASE=admin
@@ -58,7 +60,6 @@ services:
       - ME_CONFIG_BASICAUTH_PASSWORD=${MONGOEXPRESS_PASSWORD}
     depends_on:
       - "mongo"
-      - "airflow-newspipe"
-    ports:
-      - "8081:8081"
     restart: always
+    network_mode: host
+

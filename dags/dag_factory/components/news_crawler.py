@@ -35,7 +35,7 @@ class Executor(base_executor.BaseExecutor):
 
 class NewsCrawlerSpec(types.ComponentSpec):
     PARAMETERS = {
-        'url': ExecutionParameter(type=Text),
+        'url': ExecutionParameter(type=List),
     }
 
     INPUTS = {}
@@ -50,7 +50,9 @@ class NewsCrawler(base_component.BaseComponent):
     EXECUTOR_SPEC = executor_spec.ExecutorClassSpec(Executor)
 
     def __init__(self,
-                 url: Text):
+                 url):
+        if isinstance(url, str):
+            url = [url]
         rss_feed = external_input("rss_feed")
         spec = NewsCrawlerSpec(url=url,
                                rss_feed=rss_feed)

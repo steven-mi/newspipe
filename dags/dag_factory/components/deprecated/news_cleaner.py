@@ -1,11 +1,7 @@
 import os
-import yaml
-import time
 import logging
 
 import pandas as pd
-
-from datetime import datetime
 
 from typing import Any, Dict, List, Text
 
@@ -24,46 +20,7 @@ from tfx.types.component_spec import ExecutionParameter
 
 from tfx.utils.dsl_utils import external_input
 
-
-def date_str_to_unixtime(date_str):
-    d = None
-    try:
-        d = datetime.strptime(date_str)
-    except:
-        pass
-    try:
-        d = datetime.strptime(date_str, '%a, %d %b %Y %H:%M:%S %Z')
-    except:
-        pass
-    try:
-        d = datetime.strptime(date_str, '%a, %d %b %Y %H:%M:%S %z')
-    except:
-        pass
-    try:
-        d = datetime.strptime(date_str.split(
-            '+')[0].replace("T", " "), '%Y-%m-%d %H:%M:%S')
-    except:
-        pass
-    try:
-        d = datetime.strptime(date_str, '%a, %d %b %Y %H:%M:%S %z')
-    except:
-        pass
-    try:
-        d = datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
-    except:
-        pass
-    return time.mktime(d.timetuple())
-
-
-def tag_dict_to_dict(tag_dict):
-    tags = []
-
-    tag_list = yaml.load(tag_dict)
-    if isinstance(tag_list, list):
-        for tag in tag_list:
-            tags.append(tag["term"])
-        return tags
-    return None
+from dag_factory.components.utils import date_str_to_unixtime, tag_dict_to_dict
 
 
 class Executor(base_executor.BaseExecutor):
