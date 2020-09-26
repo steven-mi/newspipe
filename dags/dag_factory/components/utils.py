@@ -13,33 +13,36 @@ def get_all_csv_paths(path):
 
 
 def date_str_to_unixtime(date_str):
-    d = None
-    try:
-        d = datetime.strptime(date_str)
-    except:
-        pass
-    try:
-        d = datetime.strptime(date_str, '%a, %d %b %Y %H:%M:%S %Z')
-    except:
-        pass
-    try:
-        d = datetime.strptime(date_str, '%a, %d %b %Y %H:%M:%S %z')
-    except:
-        pass
-    try:
-        d = datetime.strptime(date_str.split(
-            '+')[0].replace("T", " "), '%Y-%m-%d %H:%M:%S')
-    except:
-        pass
-    try:
-        d = datetime.strptime(date_str, '%a, %d %b %Y %H:%M:%S %z')
-    except:
-        pass
-    try:
-        d = datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
-    except:
-        pass
-    return time.mktime(d.timetuple())
+    if date_str.isnumeric():
+        return date_str
+    else:
+        d = None
+        try:
+            d = datetime.strptime(date_str)
+        except:
+            pass
+        try:
+            d = datetime.strptime(date_str, '%a, %d %b %Y %H:%M:%S %Z')
+        except:
+            pass
+        try:
+            d = datetime.strptime(date_str, '%a, %d %b %Y %H:%M:%S %z')
+        except:
+            pass
+        try:
+            d = datetime.strptime(date_str.split(
+                '+')[0].replace("T", " "), '%Y-%m-%d %H:%M:%S')
+        except:
+            pass
+        try:
+            d = datetime.strptime(date_str, '%a, %d %b %Y %H:%M:%S %z')
+        except:
+            pass
+        try:
+            d = datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
+        except:
+            pass
+        return time.mktime(d.timetuple())
 
 
 def tag_dict_to_dict(tag_dict):
