@@ -13,11 +13,10 @@ sed -i'.orig' 's/dag_dir_list_interval = 300/dag_dir_list_interval = 600/g' ${AI
     && sed -i'.orig' "s|sql_alchemy_conn = sqlite:////airflow/airflow.db|sql_alchemy_conn = postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASS}@${POSTGRES_IP}:5432/airflow|g" ${AIRFLOW_HOME}/airflow.cfg \
     && sed -i'.orig' 's/executor = SequentialExecutor/executor = LocalExecutor/g' ${AIRFLOW_HOME}/airflow.cfg
 
-
 airflow resetdb --yes
 airflow initdb
 
-python3 /scripts/create_account.py
+python3 /scripts/create_account.py || :
 
 if [ -d "/output/pipelines" ]
 then
@@ -28,6 +27,6 @@ cp -r /output/pipelines /output/pipelines_backup/$foldername
 rm -rf /output/pipelines
 fi
 
-rm -rf $AIRFLOW_HOME/airflow-webserver* || :
+rm -rf $AIRFLOW_HOME/airflow-webserver*
 airflow webserver -D -w 2
 airflow scheduler

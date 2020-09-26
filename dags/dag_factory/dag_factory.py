@@ -1,5 +1,6 @@
 import os
 
+from dag_factory.components.update_old_news_impprt import UpdateOldNewsImport
 from dag_factory.components.old_news_import import OldNewsImport
 from dag_factory.components.news_crawler import NewsCrawler
 from dag_factory.components.mongo_import import MongoImport
@@ -12,7 +13,7 @@ from tfx.orchestration.airflow.airflow_dag_runner import AirflowDagRunner
 from tfx.orchestration.airflow.airflow_dag_runner import AirflowPipelineConfig
 
 
-def create_dag(name, url, airflow_config, mongo_ip=None, mongo_port=None, dag_type="default", output_dir="/output"):
+def create_dag(name, url, airflow_config, backup_dir="pipelines_backup", mongo_ip=None, mongo_port=None, dag_type="default", output_dir="/output"):
     pipeline_name = name.replace(".py", "")
     pipeline_root = os.path.join(output_dir, 'pipelines', pipeline_name)
     metadata_path = os.path.join(output_dir, 'metadata', pipeline_name,
@@ -33,11 +34,11 @@ def create_dag(name, url, airflow_config, mongo_ip=None, mongo_port=None, dag_ty
             rss_feed=cleaner.outputs["rss_feed_cleaned"], colname=pipeline_name)
         components = components + [crawler, cleaner, mongo]
     elif dag_type == "backup":
-        old_news = OldNewsImport(backup_dir="/output/pipelines_backup",
+        old_news = OldNewsImport(backup_dir=os.path.join("/output", backup_dir),
                                  ip=mongo_ip, port=mongo_port)
         components = components + [old_news]
     elif dag_type == "update_backup":
-        update_old_news = UpdateOldNewsImport(backup_dir="/output/pipelines_backup",
+        update_old_news = UpdateOldNewsImport(backup_dir=os.path.join("/output", backup_dir),
                                               ip=mongo_ip, port=mongo_port)
         components = components + [update_old_news]
 
