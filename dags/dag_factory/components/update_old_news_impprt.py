@@ -56,7 +56,11 @@ class Executor(base_executor.BaseExecutor):
                                                                            csv_source, csv_path))
                     for _, row in df.iterrows():
                         data = dict(row)
-                        data["text"] = extract_article_text_from_html(get_page(data["link"]))
+                        old_text = data["text"]
+                        try:
+                            data["text"] = extract_article_text_from_html(get_page(data["link"]))
+                        except:
+                            data["text"] = old_text
                         data["published"] = date_str_to_unixtime(data["published"])
                         data["tags"] = tag_dict_to_dict(data["tags"])
 

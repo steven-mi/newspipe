@@ -13,8 +13,8 @@ def get_all_csv_paths(path):
 
 
 def date_str_to_unixtime(date_str):
-    if date_str.isnumeric():
-        return date_str
+    if str(date_str).isnumeric():
+        return int(date_str)
     else:
         d = None
         try:
@@ -42,7 +42,7 @@ def date_str_to_unixtime(date_str):
             d = datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
         except:
             pass
-        return time.mktime(d.timetuple())
+        return int(time.mktime(d.timetuple())) if d else None
 
 
 def tag_dict_to_dict(tag_dict):
