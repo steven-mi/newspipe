@@ -50,6 +50,7 @@ class Executor(base_executor.BaseExecutor):
                     col = db[csv_source]
                     try:
                         df = pd.read_csv(csv_path)
+                        df = df.fillna(0)
                     except:
                         continue
                     logging.info("--Storing {} files to {} from {}".format(len(df),
@@ -58,9 +59,9 @@ class Executor(base_executor.BaseExecutor):
                         data = dict(row)
                         try:
                             article_information = extract_article_information_from_html(get_page(data["link"]))
-                            data["text"] = article_information["text"]
-                            data["published"] = date_str_to_unixtime(data["published"])
-                            data["tags"] = tag_dict_to_dict(data["tags"])
+                            for key in data.keys():
+                                if not data[key]:
+                                    data[key] = article_information[key]
                         except:
                             pass
 
@@ -70,7 +71,7 @@ class Executor(base_executor.BaseExecutor):
                         logging.info("\tWorking on: {}".format(data['link']))
 
 
-class UpdateOldNewsImport(base_component.BaseComponent):
+class UpdateNANewsImport(base_component.BaseComponent):
     SPEC_CLASS = OldNewsImportSpec
     EXECUTOR_SPEC = executor_spec.ExecutorClassSpec(Executor)
 
@@ -99,4 +100,4 @@ class UpdateOldNewsImport(base_component.BaseComponent):
                                  dbname=dbname,
                                  backup_dir=backup_dir)
 
-        super(UpdateOldNewsImport, self).__init__(spec=spec)
+        super(UpdateNANewsImport, self).__init__(spec=spec)
