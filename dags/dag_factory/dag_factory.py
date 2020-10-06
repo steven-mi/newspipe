@@ -1,5 +1,5 @@
 import os
-
+from dag_factory.components.update_na_news_impprt import UpdateNANewsImport
 from dag_factory.components.update_old_news_impprt import UpdateOldNewsImport
 from dag_factory.components.old_news_import import OldNewsImport
 from dag_factory.components.news_crawler import NewsCrawler
@@ -37,11 +37,15 @@ def create_dag(name, url, airflow_config, backup_dir="pipelines_backup", mongo_i
         old_news = OldNewsImport(backup_dir=os.path.join("/output", backup_dir),
                                  ip=mongo_ip, port=mongo_port)
         components = components + [old_news]
-    elif dag_type == "update_backup":
+    elif dag_type == "update_old_backup":
         update_old_news = UpdateOldNewsImport(backup_dir=os.path.join("/output", backup_dir),
                                               ip=mongo_ip, port=mongo_port)
         components = components + [update_old_news]
-
+    elif dag_type == "update_na_backup":
+        update_old_news = UpdateNANewsImport(backup_dir=os.path.join("/output", backup_dir),
+                                              ip=mongo_ip, port=mongo_port)
+        components = components + [update_old_news]
+        
     airflow_config["catchup"] = False
     tfx_pipeline = pipeline.Pipeline(pipeline_name=pipeline_name,
                                      pipeline_root=pipeline_root,
