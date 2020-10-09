@@ -1,7 +1,6 @@
 # NewsPipe
-![](./imgs/dashboard.png)
-
 This repository contains the complete pipeline for collecting online newspaper article. The articles are stored in a MongoDB. The whole pipeline is dockerized, thus the user does not need to worry about dependencies. Additionally, docker-compose is available to increase the useability for the user.
+![](./imgs/dashboard.png)
 
 ## Requirement
 To use this system, you need to create a `.env` file in which the MongoDB information is available:
