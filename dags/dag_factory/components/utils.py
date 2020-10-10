@@ -3,6 +3,7 @@ import yaml
 import time
 from datetime import datetime
 
+
 def get_all_csv_paths(path):
     csv_paths = []
     for root, dirs, files in os.walk(path):
@@ -46,11 +47,13 @@ def date_str_to_unixtime(date_str):
 
 
 def tag_dict_to_dict(tag_dict):
-    tags = []
+    if not tag_dict:
+        return None
 
+    tags = []
     tag_list = yaml.load(tag_dict)
     if isinstance(tag_list, list):
         for tag in tag_list:
             tags.append(tag["term"])
-        return tags
+        return ','.join(tags)
     return None
