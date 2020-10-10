@@ -60,7 +60,7 @@ class Executor(base_executor.BaseExecutor):
                         try:
                             article_information = extract_article_information_from_html(get_page(data["link"]))
                             for key in data.keys():
-                                if not data[key]:
+                                if not data.get(key, None):
                                     data[key] = article_information[key]
                         except:
                             pass

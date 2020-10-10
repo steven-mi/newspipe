@@ -58,7 +58,8 @@ class Executor(base_executor.BaseExecutor):
                         data = dict(row)
                         try:
                             article_information = extract_article_information_from_html(get_page(data["link"]))
-                            data["text"] = article_information["text"]
+                            if len(data["text"]) < len(article_information["text"]):
+                                data["text"] = article_information["text"]
                             data["published"] = date_str_to_unixtime(data["published"])
                             data["tags"] = tag_dict_to_dict(data["tags"])
                         except:

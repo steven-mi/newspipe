@@ -11,5 +11,6 @@ airflow_config = {'schedule_interval': None,  # every 30 minutes
 DAG = create_dag(url=None,
                  airflow_config=airflow_config,
                  name=os.path.basename(__file__),
-                 dag_type="backup",
+                 dag_type="update_na_backup",
+                 backup_dir="pipelines_backup_na",
                  mongo_ip="127.0.0.1")
