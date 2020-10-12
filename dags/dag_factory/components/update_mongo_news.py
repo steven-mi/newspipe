@@ -1,7 +1,8 @@
 import os
 import glob
 import logging
-import math
+
+import numpy as np
 import pandas as pd
 
 from pymongo import MongoClient
@@ -39,36 +40,47 @@ class Executor(base_executor.BaseExecutor):
         collection_names = [collection for collection in client["NewsPipe"].collection_names()]
 
         for collection_name in collection_names:
+            print("working on {}".format(collection_name))
             collection = db[collection_name]
-            cursor = collection.find({})
-            for document in cursor:
-                document_link = document["link"]
 
-                # Date
-                unixtime = date_str_to_unixtime(document["published"])
-                if unixtime:
-                    document["published"] = unixtime
-                # Tags
-                tag_str = tag_dict_to_dict(document["tags"])
-                if tag_str:
-                    document["tags"] = tag_str
-
+            processed = 0
+            while True:
+                cursor = collection.find({}, no_cursor_timeout=True).skip(processed)
                 try:
-                    article_information = extract_article_information_from_html(get_page(document_link))
-                    # Text
-                    if math.isnan(document["author"]) or not document["Text"] or \
-                            len(document["Text"]) < len(article_information["Text"]):
-                        document["Text"] = article_information["Text"]
-                    # Author
-                    if math.isnan(document["author"]) or not document["author"]:
-                        document["author"] = article_information["author"]
-                except:
-                    print("couldn't download text from {}".format(document_link))
+                    for document in cursor:
+                        document_link = document["link"]
 
-                data_op = {'$set': document}
-                query = {'_id': document['_id']}
-                print("Updating: {}".format(document_link))
-                collection.update_one(query, data_op, upsert=True)
+                        # Date
+                        unixtime = date_str_to_unixtime(document["published"])
+                        if unixtime:
+                            document["published"] = unixtime
+                        # Tags
+                        tag_str = tag_dict_to_dict(document["tags"])
+                        if tag_str:
+                            document["tags"] = tag_str
+
+                        try:
+                            article_html = get_page(document_link)
+                            article_information = extract_article_information_from_html(article_html)
+                            # Text
+                            if document["text"] != document["text"] or not document["text"] or len(document["text"]) < len(article_information["text"]):
+                                document["text"] = article_information["text"]
+                            # Author
+                            if document["author"] != document["author"] or not document["author"]:
+                                document["author"] = article_information["author"]
+                        except Exception as e:
+                            print(document_link)
+                            print(e)
+
+                        data_op = {'$set': document}
+                        query = {'link': document['link']}
+                        print("Updating: {}".format(document_link))
+                        collection.update_one(query, data_op, upsert=True)
+                        processed += 1
+                    break
+                except Exception as e:
+                    print("Lost cursor. Retry")
+                    print(e)
 
 
 class UpdateMongoNews(base_component.BaseComponent):
