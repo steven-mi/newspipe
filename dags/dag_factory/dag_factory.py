@@ -15,7 +15,7 @@ from tfx.orchestration.airflow.airflow_dag_runner import AirflowPipelineConfig
 
 
 def create_dag(name, url, airflow_config, backup_dir="pipelines_backup", mongo_ip=None, mongo_port=None,
-               dag_type="default", output_dir="/output"):
+               dag_type="default", output_dir="/output", updated_collections=[], update_collections=[]):
     pipeline_name = name.replace(".py", "")
     pipeline_root = os.path.join(output_dir, 'pipelines', pipeline_name)
     metadata_path = os.path.join(output_dir, 'metadata', pipeline_name,
@@ -40,7 +40,10 @@ def create_dag(name, url, airflow_config, backup_dir="pipelines_backup", mongo_i
                                   ip=mongo_ip, port=mongo_port)
         components = components + [load_news]
     elif dag_type == "update":
-        update_news = UpdateMongoNews(ip=mongo_ip, port=mongo_port)
+        update_news = UpdateMongoNews(ip=mongo_ip,
+                                      port=mongo_port,
+                                      updated_collections=updated_collections,
+                                      update_collections=update_collections)
         components = components + [update_news]
 
     airflow_config["catchup"] = False

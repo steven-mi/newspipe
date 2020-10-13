@@ -21,7 +21,6 @@ from tfx.types.artifact_utils import get_single_uri
 from tfx.types.component_spec import ChannelParameter
 from tfx.types.component_spec import ExecutionParameter
 
-from dag_factory.components.old_news_import import OldNewsImportSpec
 from dag_factory.components.utils import get_all_csv_paths, date_str_to_unixtime, tag_dict_to_dict
 from newscrawler.crawler import extract_article_information_from_html
 from newscrawler.extract_rss import get_page
@@ -37,9 +36,20 @@ class Executor(base_executor.BaseExecutor):
                              username=exec_properties["username"],
                              password=exec_properties["password"])
         db = client[exec_properties["dbname"]]
+
+        updated_collections = exec_properties["updated_collections"]
+        update_collections = exec_properties["update_collections"]
+
         collection_names = [collection for collection in client["NewsPipe"].collection_names()]
 
         for collection_name in collection_names:
+            if updated_collections and collection_name in updated_collections:
+                print("{} already updated".format(collection_name))
+                continue
+            if update_collections and collection_name not in update_collections:
+                print("{} not in update_collections - skipping collection")
+                continue
+
             print("working on {}".format(collection_name))
             collection = db[collection_name]
 
@@ -83,8 +93,27 @@ class Executor(base_executor.BaseExecutor):
                     print(e)
 
 
+class UpdateMongoNewsSpec(types.ComponentSpec):
+    PARAMETERS = {
+        'ip': ExecutionParameter(type=Text),
+        'port': ExecutionParameter(type=Text),
+        'username': ExecutionParameter(type=Text),
+        'password': ExecutionParameter(type=Text),
+        'dbname': ExecutionParameter(type=Text),
+        'backup_dir': ExecutionParameter(type=Text),
+        'update_collections': ExecutionParameter(type=List),
+        'updated_collections': ExecutionParameter(type=List),
+    }
+
+    INPUTS = {
+    }
+
+    OUTPUTS = {
+    }
+
+
 class UpdateMongoNews(base_component.BaseComponent):
-    SPEC_CLASS = OldNewsImportSpec
+    SPEC_CLASS = UpdateMongoNewsSpec
     EXECUTOR_SPEC = executor_spec.ExecutorClassSpec(Executor)
 
     def __init__(self,
@@ -92,7 +121,10 @@ class UpdateMongoNews(base_component.BaseComponent):
                  port: Text = None,
                  username: Text = None,
                  password: Text = None,
-                 dbname: Text = None):
+                 dbname: Text = None,
+                 updated_collections: List = [],
+                 update_collections: List = []):
+
         if not ip:
             ip = "mongo"
         if not port:
@@ -104,11 +136,13 @@ class UpdateMongoNews(base_component.BaseComponent):
         if not dbname:
             dbname = os.environ['MONGO_DATABASE_NAME']
 
-        spec = OldNewsImportSpec(ip=ip,
-                                 port=port,
-                                 username=username,
-                                 password=password,
-                                 dbname=dbname,
-                                 backup_dir="")
+        spec = UpdateMongoNewsSpec(ip=ip,
+                                   port=port,
+                                   username=username,
+                                   password=password,
+                                   dbname=dbname,
+                                   update_collections=update_collections,
+                                   updated_collections=updated_collections,
+                                   backup_dir="")
 
         super(UpdateMongoNews, self).__init__(spec=spec)
