@@ -65,9 +65,12 @@ class Executor(base_executor.BaseExecutor):
                         if unixtime:
                             document["published"] = unixtime
                         # Tags
-                        tag_str = tag_dict_to_dict(document["tags"])
-                        if tag_str:
-                            document["tags"] = tag_str
+                        try:
+                            tag_str = tag_dict_to_dict(document["tags"])
+                            if tag_str:
+                                document["tags"] = tag_str
+                        except:
+                            print("{} couldn't be parsed".format(tag_str))
 
                         try:
                             article_html = get_page(document_link)
