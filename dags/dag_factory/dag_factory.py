@@ -28,13 +28,6 @@ def create_dag(name, url, airflow_config, backup_dir="pipelines_backup", mongo_i
             ip=mongo_ip, port=mongo_port,
             rss_feed=crawler.outputs["rss_feed"], colname=pipeline_name)
         components = components + [crawler, mongo]
-    elif dag_type == "cleaner":
-        crawler = NewsCrawler(url=url)
-        cleaner = NewsCleaner(rss_feed=crawler.outputs["rss_feed"])
-        mongo = MongoImport(
-            ip=mongo_ip, port=mongo_port,
-            rss_feed=cleaner.outputs["rss_feed_cleaned"], colname=pipeline_name)
-        components = components + [crawler, cleaner, mongo]
     elif dag_type == "backup":
         load_news = OldNewsImport(backup_dir=os.path.join("/output", backup_dir),
                                   ip=mongo_ip, port=mongo_port)
