@@ -78,7 +78,7 @@ services:
 
   mongo-charts-nginx:
     image: quay.io/dtan4/nginx-basic-auth-proxy:latest
-    container_name: nginx_container
+    container_name: mongo_charts_nginx_container
     ports:
       - 8082:80
     environment:
