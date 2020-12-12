@@ -70,7 +70,7 @@ services:
       - ./mongo_charts:/mongodb-charts/volumes
     environment:
       CHARTS_SUPPORT_WIDGET_AND_METRICS: "on"
-      CHARTS_MONGODB_URI: mongodb://${MONGO_ROOT_USER}:${MONGO_ROOT_PASSWORD}@localhost:27017
+      CHARTS_MONGODB_URI: mongodb://${MONGO_ROOT_USER}:${MONGO_ROOT_PASSWORD}@127.0.0.1:27017/admin
     depends_on:
       - "mongo"
     restart: always
@@ -80,11 +80,13 @@ services:
     image: quay.io/dtan4/nginx-basic-auth-proxy:latest
     container_name: mongo_charts_nginx_container
     ports:
-      - 8082:80
+      - 8082:8082
     environment:
       - BASIC_AUTH_USERNAME=${MONGO_CHART_USERNAME}
       - BASIC_AUTH_PASSWORD=${MONGO_CHART_PASSWORD}
-      - PROXY_PASS=http://localhost:80
+      - PROXY_PASS=http://127.0.0.1:80
+      - PORT=8082
+      - SERVER_NAME=0.0.0.0
     depends_on:
       - "mongo-charts"
     network_mode: host
