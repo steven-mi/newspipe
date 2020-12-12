@@ -40,8 +40,8 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Install python packages
-RUN pip3 install --upgrade pip \
-    && pip install --upgrade setuptools \
+RUN pip3 install --upgrade pip==19.3.1 \
+    && pip install --upgrade setuptools==50.3.2 \
     && pip install apache-airflow==${AIRFLOW_VERSION} \
     && pip install NewsCrawler3==${NEWSCRAWLER_VERSION} \
     && pip install tensorflow==${TENSORFLOW_VERSION} \
