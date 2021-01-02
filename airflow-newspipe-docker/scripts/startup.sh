@@ -28,5 +28,5 @@ rm -rf /output/pipelines
 fi
 
 rm -rf $AIRFLOW_HOME/airflow-webserver*
-airflow webserver -D -w 2
+airflow webserver -D -w 2 -p 8083
 airflow scheduler

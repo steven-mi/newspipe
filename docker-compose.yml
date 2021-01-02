@@ -18,8 +18,6 @@ services:
         - POSTGRES_PASS=${POSTGRES_PASS}
         - POSTGRES_IP=127.0.0.1
     container_name: airflow_newspipe
-    ports:
-      - "8080:8080"
     volumes:
       - ./dags:/airflow/dags
       - ./output:/output
@@ -64,8 +62,13 @@ services:
     network_mode: host
 
   mongo-charts:
-    image: quay.io/mongodb/charts:v0.11.0
+    build:
+      context: 'mongo-charts-docker/charts'
+      args:
+        - EMAIL=${MONGO_CHART_USERNAME}@charts.com
+        - PASSWORD=${MONGO_CHART_PASSWORD}
     container_name: mongo_charts
+    image: mongo-charts-image
     volumes:
       - ./mongo_charts:/mongodb-charts/volumes
     environment:
@@ -75,19 +78,3 @@ services:
       - "mongo"
     restart: always
     network_mode: host
-
-  mongo-charts-nginx:
-    image: quay.io/dtan4/nginx-basic-auth-proxy:latest
-    container_name: mongo_charts_nginx_container
-    ports:
-      - 8082:8082
-    environment:
-      - BASIC_AUTH_USERNAME=${MONGO_CHART_USERNAME}
-      - BASIC_AUTH_PASSWORD=${MONGO_CHART_PASSWORD}
-      - PROXY_PASS=http://127.0.0.1:80
-      - PORT=8082
-      - SERVER_NAME=0.0.0.0
-    depends_on:
-      - "mongo-charts"
-    network_mode: host
-    restart: always

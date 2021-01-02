@@ -1,4 +1,4 @@
-# NewsPipe
+c# NewsPipe
 This repository contains the complete pipeline for collecting online newspaper article. The articles are stored in a MongoDB. The whole pipeline is dockerized, thus the user does not need to worry about dependencies. Additionally, docker-compose is available to increase the useability for the user.
 
 <img src=".github/imgs/dashboard.png" alt="drawing" style="width:35%;"/>
@@ -33,8 +33,8 @@ To start this application, run:
 docker-compose up
 ```
 - To see the database collections, [mongo-express](https://github.com/mongo-express/mongo-express) is in use and available on `localhost:8081`. The MongoDB itself is available on port `27017`. 
-- The airflow application should be available on `localhost:8080`. You will see the airflow dashboard with the default examples.
-
+- The airflow application should be available on `localhost:8083`. You will see the airflow dashboard with the default examples.
+- For the mongo chart dashboard, open `localhost`
 ## Adding article sources
 Each crawler is defined as DAG in 'dag'. To add a data source, you must therefore add DAGs in the `dags` folder. A DAG is a Python script that contains the settings for an entire crawling pipeline. Use the default example as a template. The DAGs are very simple and straightforward.
 
@@ -46,13 +46,13 @@ from dag_factory import create_dag
 
 url = "taz.de" # url of newspaper source
 
-# defining the crawling times
+# Defining the crawling intervals
 airflow_config = {'schedule_interval': '@hourly', # set a interval, for continuous crawling
                   'start_date': datetime.datetime(2020, 6, 4, 21), # set a date, on which the dag will run
                   'end_date':datetime.datetime(2020, 6, 5, 6), # optinal, set if it is needed
                   }
 
-# create DAG
+# Create crawling DAG
 DAG = create_dag(url=url,
                  airflow_config=airflow_config,
                  name=os.path.basename(__file__))
@@ -69,3 +69,16 @@ Options for `schedule_interval`:
 | `@yearly`    | Run once a year at midnight of January 1                   | `0 0 1 1 *`   |
 
 
+# Mongo Charts
+MongoDB Charts is a data visualization tool that is integrated within the MongoDB ecosystem. By default, there are no visualization available or shipped with NewsPipe. You will have to create dashboard on your needs. In order to do so, open Mongo Charts on `localhost:80` and log in with your credentials. The credentials for mongo charts are:
+- E-Mail: MONGO_CHART_USERNAME@charts.com
+- Password: MONGO_CHART_PASSWORD
+
+There are 3 steps involved in creating visualizations:
+- Setup data source
+- Data aggregation
+- Dashboard creation
+
+These steps are documented on [docs.mongodb.com](https://docs.mongodb.com/charts/saas/tutorial/order-data/order-data-tutorial-overview) and are not going to be shown here. 
+
+Note: The connection URI for the mongodb is: `mongodb://MONGO_ROOT_USER:MONGO_ROOT_PASSWORD@127.0.0.1:27017`
