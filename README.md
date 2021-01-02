@@ -1,4 +1,4 @@
-c# NewsPipe
+# NewsPipe
 This repository contains the complete pipeline for collecting online newspaper article. The articles are stored in a MongoDB. The whole pipeline is dockerized, thus the user does not need to worry about dependencies. Additionally, docker-compose is available to increase the useability for the user.
 
 <img src=".github/imgs/dashboard.png" alt="drawing" style="width:35%;"/>
@@ -70,15 +70,15 @@ Options for `schedule_interval`:
 
 
 # Mongo Charts
-MongoDB Charts is a data visualization tool that is integrated within the MongoDB ecosystem. By default, there are no visualization available or shipped with NewsPipe. You will have to create dashboard on your needs. In order to do so, open Mongo Charts on `localhost:80` and log in with your credentials. The credentials for mongo charts are:
-- E-Mail: MONGO_CHART_USERNAME@charts.com
-- Password: MONGO_CHART_PASSWORD
-
-There are 3 steps involved in creating visualizations:
+MongoDB Charts is a data visualization tool that is integrated within the MongoDB ecosystem. By default, there are no visualization available or shipped with NewsPipe. Therefore, you have to create dashboard on your needs. This involves following 3 steps:
 - Setup data source
 - Data aggregation
 - Dashboard creation
+which are well documented on [docs.mongodb.com](https://docs.mongodb.com/charts/saas/tutorial/order-data/order-data-tutorial-overview).
 
-These steps are documented on [docs.mongodb.com](https://docs.mongodb.com/charts/saas/tutorial/order-data/order-data-tutorial-overview) and are not going to be shown here. 
-
-Note: The connection URI for the mongodb is: `mongodb://MONGO_ROOT_USER:MONGO_ROOT_PASSWORD@127.0.0.1:27017`
+## Credentials:
+The credentials for mongo charts are:
+- E-Mail: MONGO_CHART_USERNAME@charts.com
+- Password: MONGO_CHART_PASSWORD
+## Connection URI
+- URI: `mongodb://MONGO_ROOT_USER:MONGO_ROOT_PASSWORD@127.0.0.1:27017`
