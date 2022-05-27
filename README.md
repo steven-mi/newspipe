@@ -1,5 +1,5 @@
 # NewsPipe
-This repository contains the complete pipeline for collecting online newspaper article. The articles are stored in a MongoDB. The whole pipeline is dockerized, thus the user does not need to worry about dependencies. Additionally, docker-compose is available to increase the useability for the user.
+This repository contains the complete pipeline for collecting online newspaper article. The articles are stored in a MongoDB. The whole pipeline is dockerized, thus the user does not need to worry about dependencies. Additionally, docker-compose is available to increase the usability for the user.
 
 <img src=".github/imgs/dashboard.png" alt="drawing" style="width:35%;"/>
 
@@ -49,7 +49,7 @@ url = "taz.de" # url of newspaper source
 # Defining the crawling intervals
 airflow_config = {'schedule_interval': '@hourly', # set a interval, for continuous crawling
                   'start_date': datetime.datetime(2020, 6, 4, 21), # set a date, on which the dag will run
-                  'end_date':datetime.datetime(2020, 6, 5, 6), # optinal, set if it is needed
+                  'end_date':datetime.datetime(2020, 6, 5, 6), # optional, set if it is needed
                   }
 
 # Create crawling DAG
